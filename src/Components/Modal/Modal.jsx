@@ -38,12 +38,8 @@ export default class Modal extends Component {
 
 Modal.propTypes = {
   onClose: PropTypes.func,
-  images: PropTypes.objectOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      largeImageURL: PropTypes.string,
-      webformatURL: PropTypes.string,
-      tags: PropTypes.string,
-    }),
-  ),
+  images: PropTypes.shape({
+    alt: PropTypes.string,
+    src: PropTypes.string,
+  }),
 };
