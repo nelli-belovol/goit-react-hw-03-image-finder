@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import shortid from 'shortid';
 import Searchbar from './Components/Searchbar/Searchbar.jsx';
 import ImageGallery from './Components/ImageGallery/ImageGallery.jsx';
 import ImageGalleryItem from './Components/ImageGalleryItem/ImageGalleryItem.jsx';
@@ -55,20 +55,7 @@ export default class App extends Component {
       } else {
         this.setState({ maxPage: 0 });
       }
-
-      this.setState({ images: [] });
-      images.map(img => {
-        return this.setState(prevState => ({
-          images: [
-            ...prevState.images,
-            {
-              id: img.id,
-              webformatURL: img.webformatURL,
-              largeImageURL: img.largeImageURL,
-            },
-          ],
-        }));
-      });
+      this.setState({ images });
     } catch (error) {
       this.setState({ error });
     } finally {
@@ -81,18 +68,9 @@ export default class App extends Component {
       const { page, query } = this.state;
       const data = await getImages(query, page);
       const images = data.hits;
-      images.map(img => {
-        return this.setState(prevState => ({
-          images: [
-            ...prevState.images,
-            {
-              id: img.id,
-              webformatURL: img.webformatURL,
-              largeImageURL: img.largeImageURL,
-            },
-          ],
-        }));
-      });
+      this.setState(prevState => ({
+        images: [...prevState.images, ...images.map(img => img)],
+      }));
     } catch (error) {
       this.setState({ error });
     } finally {
@@ -119,11 +97,16 @@ export default class App extends Component {
       <>
         <Searchbar onSubmit={this.handleSubmit} />
         {this.state.images.length > 0 && (
-          <ImageGallery>
-            <ImageGalleryItem
-              showImage={this.showImage}
-              images={this.state.images}
-            />
+          <ImageGallery showImage={this.showImage}>
+            {this.state.images.map(img => {
+              return (
+                <ImageGalleryItem
+                  key={shortid.generate()}
+                  img={img}
+                  showImage={this.showImage}
+                />
+              );
+            })}
             {this.state.showModal && (
               <Modal onClose={this.toggleModal} image={this.state.bigImg} />
             )}

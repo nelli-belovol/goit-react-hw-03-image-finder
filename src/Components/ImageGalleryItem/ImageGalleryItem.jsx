@@ -1,39 +1,23 @@
 import React from 'react';
-import shortid from 'shortid';
+import s from './ImageGalleryItem.module.scss';
 import PropTypes from 'prop-types';
 
-export default function ImageGalleryItem({ images, showImage }) {
+export default function ImageGalleryItem({ img, showImage }) {
   return (
-    <>
-      {images.map(img => {
-        return (
-          <li
-            onClick={() => showImage(img)}
-            key={shortid.generate()}
-            className="ImageGalleryItem"
-          >
-            <img
-              data-id={img.id}
-              data-largeimg={img.largeImageURL}
-              src={img.webformatURL}
-              alt={img.tags}
-              className="ImageGalleryItem-image"
-            />
-          </li>
-        );
-      })}
-    </>
+    <li onClick={() => showImage(img)} className={s.ImageGalleryItem}>
+      <img
+        src={img.webformatURL}
+        alt={img.tags}
+        className={s.ImageGalleryItem__image}
+      />
+    </li>
   );
 }
 
 ImageGalleryItem.propTypes = {
   showImage: PropTypes.func,
-  images: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      largeImageURL: PropTypes.string,
-      webformatURL: PropTypes.string,
-      tags: PropTypes.string,
-    }),
-  ),
+  img: PropTypes.shape({
+    webformatURL: PropTypes.string,
+    tags: PropTypes.string,
+  }),
 };

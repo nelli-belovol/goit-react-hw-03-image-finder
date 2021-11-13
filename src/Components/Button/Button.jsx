@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import s from './Button.module.scss';
 
 export default function Button({ onClick }) {
   return (
-    <>
-      <button className="Button" onClick={onClick} type="button">
-        Load more
-      </button>
-    </>
+    <button className={s.Button} onClick={onClick} type="button">
+      Load more
+    </button>
   );
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import s from './Loader.module.scss';
 
 // import PropTypes from 'prop-types';
 
@@ -9,7 +10,7 @@ export default class App extends React.Component {
   render() {
     return (
       <Loader
-        className="Loader"
+        className={s.Loader}
         type="Hearts"
         color="#3f51b5"
         height={80}

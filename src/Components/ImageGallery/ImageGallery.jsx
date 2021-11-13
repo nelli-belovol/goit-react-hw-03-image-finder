@@ -1,10 +1,6 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import s from './ImageGallery.module.scss';
 
 export default function ImageGallery({ children }) {
-  return (
-    <>
-      <ul className="ImageGallery">{children}</ul>
-    </>
-  );
+  return <ul className={s.ImageGallery}>{children}</ul>;
 }
