@@ -18,6 +18,7 @@ export default class App extends Component {
     error: null,
     showModal: false,
     bigImg: {},
+    maxPage: 1,
   };
 
   handleSubmit = value => {
@@ -33,12 +34,12 @@ export default class App extends Component {
     this.setState({ isLoading: true });
   };
 
-  showImage = e => {
+  showImage = img => {
     this.toggleModal();
     this.setState({
       bigImg: {
-        src: e.target.dataset.largeimg,
-        alt: e.target.alt,
+        src: img.largeImageURL,
+        alt: img.tags,
       },
     });
   };
@@ -46,8 +47,28 @@ export default class App extends Component {
   async setImages() {
     try {
       const { page, query } = this.state;
-      const images = await getImages(query, page);
-      this.setState({ images });
+      const data = await getImages(query, page);
+      const images = data.hits;
+      const allPages = Math.ceil(data.total / images.length);
+      if (!isNaN(allPages)) {
+        this.setState({ maxPage: allPages });
+      } else {
+        this.setState({ maxPage: 0 });
+      }
+
+      this.setState({ images: [] });
+      images.map(img => {
+        return this.setState(prevState => ({
+          images: [
+            ...prevState.images,
+            {
+              id: img.id,
+              webformatURL: img.webformatURL,
+              largeImageURL: img.largeImageURL,
+            },
+          ],
+        }));
+      });
     } catch (error) {
       this.setState({ error });
     } finally {
@@ -58,10 +79,8 @@ export default class App extends Component {
   async loadMore() {
     try {
       const { page, query } = this.state;
-      const images = await getImages(query, page);
-      // if (images.length < 12) {
-
-      // }
+      const data = await getImages(query, page);
+      const images = data.hits;
       images.map(img => {
         return this.setState(prevState => ({
           images: [
@@ -87,7 +106,6 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(`componentDidUpdate`);
     if (this.state.query !== prevState.query) {
       this.setImages();
     }
@@ -112,11 +130,12 @@ export default class App extends Component {
           </ImageGallery>
         )}
 
-        {this.state.isLoading ? (
-          <Loader />
-        ) : (
-          <Button onClick={this.handleButton} />
-        )}
+        {this.state.isLoading && <Loader />}
+
+        {this.state.maxPage > this.state.page &&
+          this.state.images.length > 0 && (
+            <Button onClick={this.handleButton} />
+          )}
       </>
     );
   }

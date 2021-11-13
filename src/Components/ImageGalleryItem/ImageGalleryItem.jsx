@@ -8,7 +8,7 @@ export default function ImageGalleryItem({ images, showImage }) {
       {images.map(img => {
         return (
           <li
-            onClick={showImage}
+            onClick={() => showImage(img)}
             key={shortid.generate()}
             className="ImageGalleryItem"
           >
@@ -28,7 +28,7 @@ export default function ImageGalleryItem({ images, showImage }) {
 
 ImageGalleryItem.propTypes = {
   showImage: PropTypes.func,
-  images: PropTypes.objectOf(
+  images: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
       largeImageURL: PropTypes.string,
